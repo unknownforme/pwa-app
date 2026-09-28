@@ -1,0 +1,24 @@
+{
+    "name": "My Test PWA",
+    "short_name": "Test PWA",
+    "start_url": "/",
+    "display": "standalone",
+    "icons": [
+        {
+          "src": "/icons/icon_32x32.png",
+          "type": "image/png", "sizes": "32x32"
+        },
+        {
+          "src": "/icons/icon_128x128.png",
+          "type": "image/png", "sizes": "128x128"
+        },
+        {
+          "src": "/icons/icon_256x256.png",
+          "type": "image/png","sizes": "256x256"
+        },
+        {
+          "src": "/icons/icon_512x512.png",
+          "type": "image/png", "sizes": "512x512"
+        }
+    ]
+}
