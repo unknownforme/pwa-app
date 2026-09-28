@@ -15,16 +15,16 @@
 </head>
 <body>
     <div id="header">
-        <div class="styledheader">doel:</div>
-        <select class="styledheader" id="floor" onchange="changeFloorIntent()">
-            <option value="" hidden selected>kies een verdieping</option>
+        <div class="centeredtext themeborder styledheader">doel:</div>
+        <select class="centeredtext themeborder styledheader" id="floor" onchange="changeFloorIntent()" style="border-left: 0;border-right: 0;">
+            <option value="" hidden selected>kies verdieping</option>
             <option value="0">begane grond</option>
             <option value="1">verdieping 1</option>
             <option value="2">verdieping 2</option>
             <option value="3">verdieping 3</option>
             <option value="4">verdieping 4</option>
         </select>
-        <select class="styledheader" id="classroom" disabled>
+        <select class="centeredtext themeborder styledheader" id="classroom" disabled>
             <option hidden selected>klaslokaal</option>
         </select>
     </div>
@@ -35,7 +35,7 @@
             </svg>
         </div><!--the overlay for svg elements, is rotated 160deg-->
         <div id="imagecontainer">
-            <img class="map" id="floor0" src="images/0.png" >
+            <img class="map" id="floor0" src="images/0.png" hidden>
             <img class="map" id="floor1" src="images/1.png" hidden>
             <img class="map" id="floor2" src="images/2.png" hidden>
             <img class="map" id="floor3" src="images/3.png" hidden>
@@ -44,9 +44,14 @@
     </div>
     <div id="demo"></div>
     <div id="footer">
-        <div><button id="arrowup" onclick="changefloor(1)">buttonup</button></div>
-        <div id="currentfloor"></div>
-        <div><button id="arrowdown" onclick="changefloor(-1)" disabled>buttondown</button></div>
+        <div class="centeredtext themeborder" id="textfooter">
+            huidige verdieping:
+        </div>
+        <div class="centeredtext" id="currentfloor" style="font-size: 5vw;"></div>
+        <div id="buttons">
+            <button class="themeborder" id="arrowup" style="border-bottom: 0;" onclick="changefloor(1)">1 verdieping omhoog</button>
+            <button class="themeborder" id="arrowdown" onclick="changefloor(-1)" disabled>1 verdieping omlaag</button>
+        </div>
     </div>
     <script src="js/data.js"></script>
     <script src="js/app.js"></script>

@@ -54,6 +54,7 @@ function getClosestPoint(x, y) {
 function changefloor(direction) {
 	document.getElementById("floor" + currentfloor).hidden = true;
 	currentfloor += direction;
+	document.getElementById("currentfloor").innerHTML = currentfloor;
 	document.getElementById("floor" + currentfloor).hidden = false;
 	if (currentfloor == 4) {
 		document.getElementById("arrowup").disabled = true;
@@ -64,6 +65,7 @@ function changefloor(direction) {
 		document.getElementById("arrowdown").disabled = false;
 	}
 }
+changefloor(0);
 
 function translateUserCoordsToLocation() {
 	if (userdifflong == Infinity) {
@@ -127,11 +129,16 @@ function removeOptions(selectElement) {
    }
 }
 
+function getKeyByValue(object, value) {
+  return Object.keys(object).find(key => object[key] === value);
+}
+
 function drawroute() {
 	let schoolPathPoints = genericPathPoints;
+	eliminateFurtherOptions(schoolPathPoints);
 	if (userlocationx == Infinity) {
 		return;
-	}
+	} //wont happen 
 	if (floorgoal != currentfloor) {
 		//go to the stairs
 		getClosestPoint()
@@ -155,8 +162,11 @@ function drawdot(point) {
 
 }
 
-function isRightDirection() {
-	
+function eliminateFurtherOptions(pathPoints) {
+	//userlocationx
+	for (let x = 0; x <= pathPoints.length; x++) {
+		
+	}
 }
 
 for (const point of genericPathPoints) {
