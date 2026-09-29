@@ -6,9 +6,9 @@ let currentfloor = 0;
 // latitude is horizontal, x is horizontal too
 //longitude is vertical, y is vertical too
 const maxlong = 52.017550;
-const maxlat = 4.683915;
+const minlat = 4.683915;
 const minlong = 52.016908;
-const minlat = 4.684972;
+const maxlat = 4.684972;
 let userlocationx = Infinity;
 let userlocationy = Infinity;
 const floors = {
@@ -66,9 +66,25 @@ function changefloor(direction) {
 	}
 }
 changefloor(0);
+function getGoal() {
+	let location = {x:0, y:0};
+	if (floorgoal != currentfloor) {
+		location = specialPoints.stairs;
+	}
+	let intentedfloor = floors[floorgoal.value];
+	// console.log(intentedfloor[document.getElementById("classroom").value].x);
+	return intentedfloor[document.getElementById("classroom").value];
+}
+
+function drawUserLocation() {
+	console.log("drawn user");
+	let mylocation = translateUserCoordsToLocation();
+	console.log(mylocation.x);
+	drawdot(mylocation);
+}
 
 function translateUserCoordsToLocation() {
-	if (userdifflong == Infinity) {
+	if (userlocationx == Infinity) {
 		return;
 	}
 
@@ -78,11 +94,12 @@ function translateUserCoordsToLocation() {
 	let translatedpointlong = percentagelong * 6;
 	
 	let difflat = maxlat - minlat;
-	let userdifflat = userlocationx - minlat;
+	let userdifflat = userlocationy - minlat;
 	let percentagelat = userdifflat / difflat * 100;
 	let translatedpointlat = percentagelat * 6;
-
-	let point = {x: translatedpointlong, y: translatedpointlat}
+	//check when in english which is more accurate
+	let point = {x: translatedpointlat, y: 600 - translatedpointlong}
+	// let point = {x: 600 - translatedpointlat, y: 600 - translatedpointlong}
 	return point;
 }
 
@@ -134,14 +151,17 @@ function getKeyByValue(object, value) {
 }
 
 function drawroute() {
+	console.log("tries to draw initialisation");
 	let schoolPathPoints = genericPathPoints;
 	eliminateFurtherOptions(schoolPathPoints);
 	if (userlocationx == Infinity) {
 		return;
 	} //wont happen 
+	drawUserLocation();
 	if (floorgoal != currentfloor) {
 		//go to the stairs
-		getClosestPoint()
+		let goal = getGoal();
+		getClosestPoint();
 	}
 
 	//go to the class
@@ -164,8 +184,10 @@ function drawdot(point) {
 
 function eliminateFurtherOptions(pathPoints) {
 	//userlocationx
+	let keynr = 0;
 	for (let x = 0; x <= pathPoints.length; x++) {
-		
+		let goal = getGoal();
+
 	}
 }
 
@@ -174,7 +196,7 @@ for (const point of genericPathPoints) {
 }
 let spot = 6;
 let thingy = getClosestPoint(genericPathPoints[spot].x, genericPathPoints[spot].y);
-drawLine(genericPathPoints[spot].x, genericPathPoints[spot].y, thingy[0], thingy[1]);
+// drawLine(genericPathPoints[spot].x, genericPathPoints[spot].y, thingy[0], thingy[1]);
 // drawLine(genericPathPoints[0].x, genericPathPoints[0].y, genericPathPoints[1].x, genericPathPoints[1].y);
 
 async function getLocation() {
@@ -190,12 +212,6 @@ async function getLocation() {
     });
 }
 
-function success(position) {
-	x.innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;
-	userlocationx = position.coords.latitude;
-	userlocationy = position.coords.longitude;
-}
-
 function error() {
 	x.innerHTML = "Sorry, no position available.";
 }
@@ -203,13 +219,23 @@ function error() {
 async function start() {
     try {
         let userlocation = await getLocation();
-		userlocationx = userlocation.x
-		userlocationy = userlocation.y
-        drawroute();
+		userlocationx = userlocation.coords.latitude
+		userlocationy = userlocation.coords.longitude
+		if (document.getElementById("classroom").value != "unusable") {
+			drawroute();
+		} else {
+			console.log("ignoring correctly")
+		}
 
         setInterval(async () => {
-            await getLocation();
-            drawroute();
+            userlocation = await getLocation();
+			userlocationx = userlocation.coords.latitude
+			userlocationy = userlocation.coords.longitude
+			if (document.getElementById("classroom").value != "unusable") {
+				drawroute();
+			} else {
+				console.log("ignoring correctly")
+			}
         }, 1000);
 
     } catch (error) {

@@ -6,10 +6,10 @@
     <title>My Test PWA</title>
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="icons/icon_32x32.png">
-    <link rel="icon" href="icons/icon_128x128.png">
-    <link rel="icon" href="icons/icon_256x256.png">
-    <link rel="icon" href="icons/icon_512x512.png">
+    <link rel="icon" href="icons/32.png">
+    <link rel="icon" href="icons/128.png">
+    <link rel="icon" href="icons/256.png">
+    <link rel="icon" href="icons/512.png">
     <meta name="web-app-status-bar" content="#f7df1e">
     <meta name="theme-color" content="#f7df1e">
 </head>
@@ -24,8 +24,8 @@
             <option value="3">verdieping 3</option>
             <option value="4">verdieping 4</option>
         </select>
-        <select class="centeredtext themeborder styledheader" id="classroom" disabled>
-            <option hidden selected>klaslokaal</option>
+        <select class="centeredtext themeborder styledheader" id="classroom" onchange="drawroute()" disabled>
+            <option value="unusable" hidden selected>klaslokaal</option>
         </select>
     </div>
     <div id="container">
