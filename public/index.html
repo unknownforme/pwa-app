@@ -49,8 +49,16 @@
         </div>
         <div class="centeredtext" id="currentfloor" style="font-size: 5vw;"></div>
         <div id="buttons">
-            <button class="themeborder" id="arrowup" style="border-bottom: 0;" onclick="changefloor(1)">1 verdieping omhoog</button>
-            <button class="themeborder" id="arrowdown" onclick="changefloor(-1)" disabled>1 verdieping omlaag</button>
+            <button class="themeborder" id="arrowup" style="border-bottom: 0;" onclick="changefloor(1)">
+                <svg height="30px" width="30px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 131.27 131.27" xml:space="preserve">
+                <g><g><path style="fill:#010002;" d="M128.286,110.837c-0.901,0-1.79-0.406-2.375-1.181L65.634,30.296L5.357,109.655 c-0.996,1.319-2.864,1.569-4.177,0.573s-1.569-2.864-0.573-4.177l65.027-85.619l65.027,85.619c0.996,1.313,0.746,3.18-0.573,4.177 C129.551,110.64,128.919,110.837,128.286,110.837z"/></g></g>
+                </svg>
+            </button>
+            <button class="themeborder" id="arrowdown" onclick="changefloor(-1)" disabled>
+                <svg height="30px" width="30px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 131.27 131.27" xml:space="preserve">
+                    <g><g><path style="fill:#010002;" d="M65.636,110.839L0.609,25.22c-0.996-1.313-0.746-3.18,0.573-4.177 c1.313-1.002,3.18-0.746,4.177,0.573l60.277,79.359l60.277-79.359c0.996-1.319,2.864-1.575,4.177-0.573 c1.313,0.996,1.569,2.864,0.573,4.177L65.636,110.839z"/> </g></g>
+                </svg>
+            </button>
         </div>
     </div>
     <script src="js/data.js"></script>
