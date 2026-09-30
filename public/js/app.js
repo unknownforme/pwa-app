@@ -30,25 +30,45 @@ function getClickPosition(e) {
 	console.log(`{x: ${svgPoint.x}, y: ${svgPoint.y}},`);
 }
 
-function getClosestPoint(x, y) {
-	//todo
-	let pathPoints = genericPathPoints;
-	let closest = 10000;
-	let closestY = 10000;
-	let closestX = 10000;
-	for (const point of pathPoints) {
-		if (point.used == true) {continue;}
-		let differenceX = Math.abs(point.x - x);
-		let differenceY = Math.abs(point.y - y);
-		
-		let total_distance = Math.sqrt((differenceX * differenceX) + (differenceY * differenceY));
-		if (closest > total_distance && total_distance > 1) {
-			closest = total_distance;
-			closestY = point.y;
-			closestX = point.x;
-		}
-	}
-	return [closestX, closestY];
+function getClosestPoint(x, y, goal, pathPoints) {
+    let closest = Infinity;
+    let closestKey = -1;
+
+    const currentDistanceToGoal =
+        (goal.x - x) ** 2 +
+        (goal.y - y) ** 2;
+
+    for (let key = 0; key < pathPoints.length; key++) {
+        const point = pathPoints[key];
+
+        if (point.used) continue;
+
+        const dx = point.x - x;
+        const dy = point.y - y;
+        const distance = dx * dx + dy * dy;
+
+        const goalDistance =
+            (goal.x - point.x) ** 2 +
+            (goal.y - point.y) ** 2;
+
+        // Don't choose points that move us farther from the goal
+        if (goalDistance >= currentDistanceToGoal) continue;
+
+        if (distance < closest && distance > 1) {
+            closest = distance;
+            closestKey = key;
+        }
+    }
+
+    if (closestKey === -1) {
+        return null;
+    }
+
+    return {
+        x: pathPoints[closestKey].x,
+        y: pathPoints[closestKey].y,
+        key: closestKey
+    };
 }
 
 function changefloor(direction) {
@@ -64,16 +84,23 @@ function changefloor(direction) {
 		document.getElementById("arrowup").disabled = false;
 		document.getElementById("arrowdown").disabled = false;
 	}
+	if (userlocationx !== Infinity) {
+        drawroute();
+    }
 }
 changefloor(0);
 function getGoal() {
 	let location = {x:0, y:0};
+	floorgoal = document.getElementById("floor").value;
 	if (floorgoal != currentfloor) {
 		location = specialPoints.stairs;
+	} else {
+		let intentedfloor = floors[floorgoal];
+		location = intentedfloor[document.getElementById("classroom").value];
 	}
-	let intentedfloor = floors[floorgoal.value];
 	// console.log(intentedfloor[document.getElementById("classroom").value].x);
-	return intentedfloor[document.getElementById("classroom").value];
+	
+	return location;
 }
 
 function drawUserLocation() {
@@ -98,22 +125,22 @@ function translateUserCoordsToLocation() {
 	let percentagelat = userdifflat / difflat * 100;
 	let translatedpointlat = percentagelat * 6;
 	//check when in english which is more accurate
-	let point = {x: translatedpointlat, y: 600 - translatedpointlong}
+	let point = {x: translatedpointlat - 40, y: 600 - translatedpointlong}
 	// let point = {x: 600 - translatedpointlat, y: 600 - translatedpointlong}
 	return point;
 }
 
-function whichIsCloser(x1, y1, x2, y2) {
-	let difference1X = userlocationx - x1;
-	let difference1Y = userlocationy - y1;
-	let difference2X = userlocationx - x2;
-	let difference2Y = userlocationy - y2;
-	let distance1 = Math.sqrt((difference1X * difference1X) + (difference1Y * difference1Y));
-	let distance2 = Math.sqrt((difference2X * difference2X) + (difference2Y * difference2Y));
-	if (distance1 < distance2) {
-		return [x1, y1];
-	}
-	return [x2, y2];
+function isFirstCloser(x1, y1, x2, y2, goal) {
+    let difference1X = goal.x - x1;
+    let difference1Y = goal.y - y1;
+
+    let difference2X = goal.x - x2;
+    let difference2Y = goal.y - y2;
+
+    let distance1 = difference1X * difference1X + difference1Y * difference1Y;
+    let distance2 = difference2X * difference2X + difference2Y * difference2Y;
+
+    return distance1 < distance2;
 }
 
 function drawLine(startX, startY, endX, endY) {
@@ -150,22 +177,46 @@ function getKeyByValue(object, value) {
   return Object.keys(object).find(key => object[key] === value);
 }
 
+function erasePreviousRoute() {
+    document.querySelectorAll("svg .line, svg circle").forEach(element => {
+        element.remove();
+    });
+}
+
 function drawroute() {
+	erasePreviousRoute();
 	console.log("tries to draw initialisation");
-	let schoolPathPoints = genericPathPoints;
-	eliminateFurtherOptions(schoolPathPoints);
+	//erase all existing points too
+	let schoolPathPoints = structuredClone(genericPathPoints);
+	schoolPathPoints = eliminateFurtherOptions(schoolPathPoints);
 	if (userlocationx == Infinity) {
 		return;
 	} //wont happen 
 	drawUserLocation();
-	if (floorgoal != currentfloor) {
-		//go to the stairs
-		let goal = getGoal();
-		getClosestPoint();
+	//go to the stairs
+	let goal = getGoal();
+	let translateduserlocation = translateUserCoordsToLocation();
+	let locationx = translateduserlocation.x;
+	let locationy = translateduserlocation.y;
+	let previousclosestx = locationx;
+	let previousclosesty = locationy;
+	while (true) {
+		let closest = getClosestPoint(locationx, locationy, goal, schoolPathPoints);
+		if (closest == null) {
+			break
+		}
+		if (isFirstCloser(locationx, locationy, closest.x, closest.y, goal)) {
+			break;
+		}
+		locationx = closest.x;
+		locationy = closest.y;
+		schoolPathPoints[closest.key].used = true;
+		drawLine(locationx, locationy, previousclosestx, previousclosesty);
+		previousclosestx = locationx;
+		previousclosesty = locationy;
 	}
-
-	//go to the class
-	//todo
+	drawLine(previousclosestx, previousclosesty, goal.x, goal.y);
+	console.log("sigh");
 }
 
 function drawdot(point) {
@@ -178,24 +229,33 @@ function drawdot(point) {
 	circle.setAttribute("cy", Math.abs(point.y));
 	circle.setAttribute("r", 5);
 	circle.setAttribute("class", "circle");
-	svg.appendChild(circle);
+	// svg.appendChild(circle);
 
 }
 
 function eliminateFurtherOptions(pathPoints) {
 	//userlocationx
-	let keynr = 0;
-	for (let x = 0; x <= pathPoints.length; x++) {
+	for (let keynr = 0; keynr < pathPoints.length; keynr++) {
 		let goal = getGoal();
-
+		let translateduserlocation = translateUserCoordsToLocation();
+		let distancefromgoalx = goal.x - pathPoints[keynr].x;
+		let distancefromgoaly = goal.y - pathPoints[keynr].y;
+		let userdistancefromgoalx = goal.x - translateduserlocation.x;
+		let userdistancefromgoaly = goal.y - translateduserlocation.y;
+		let distance1 = Math.sqrt((distancefromgoalx * distancefromgoalx) + (distancefromgoaly * distancefromgoaly));
+		let distance2 = Math.sqrt((userdistancefromgoalx * userdistancefromgoalx) + (userdistancefromgoaly * userdistancefromgoaly));
+		if (distance1 > distance2) {
+			pathPoints[keynr].used = true;
+		}
 	}
+	return pathPoints;
 }
 
 for (const point of genericPathPoints) {
 	drawdot(point);
 }
 let spot = 6;
-let thingy = getClosestPoint(genericPathPoints[spot].x, genericPathPoints[spot].y);
+// let thingy = getClosestPoint(genericPathPoints[spot].x, genericPathPoints[spot].y);
 // drawLine(genericPathPoints[spot].x, genericPathPoints[spot].y, thingy[0], thingy[1]);
 // drawLine(genericPathPoints[0].x, genericPathPoints[0].y, genericPathPoints[1].x, genericPathPoints[1].y);
 
@@ -236,7 +296,7 @@ async function start() {
 			} else {
 				console.log("ignoring correctly")
 			}
-        }, 1000);
+        }, 5000);
 
     } catch (error) {
         console.log("Location permission denied");
