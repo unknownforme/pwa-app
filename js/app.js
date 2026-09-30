@@ -275,32 +275,22 @@ async function getLocation() {
 function error() {
 	x.innerHTML = "Sorry, no position available.";
 }
+function start() {
+    navigator.geolocation.watchPosition(
+        position => {
+            userlocationx = position.coords.latitude;
+            userlocationy = position.coords.longitude;
 
-async function start() {
-    try {
-        let userlocation = await getLocation();
-		userlocationx = userlocation.coords.latitude
-		userlocationy = userlocation.coords.longitude
-		if (document.getElementById("classroom").value != "unusable") {
-			drawroute();
-		} else {
-			console.log("ignoring correctly")
-		}
-
-        setInterval(async () => {
-            userlocation = await getLocation();
-			userlocationx = userlocation.coords.latitude
-			userlocationy = userlocation.coords.longitude
-			if (document.getElementById("classroom").value != "unusable") {
-				drawroute();
-			} else {
-				console.log("ignoring correctly")
-			}
-        }, 5000);
-
-    } catch (error) {
-        console.log("Location permission denied");
-    }
+            if (document.getElementById("classroom").value != "unusable") {
+                drawroute();
+            } else {
+                console.log("ignoring correctly");
+            }
+        },
+        error => {
+            console.log("Location permission denied");
+        }
+    );
 }
 
 start();
