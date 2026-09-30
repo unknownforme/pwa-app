@@ -1,13 +1,17 @@
 var assets = [
-    "/",
-    "/index.html",
-    "/style.css",
-    "/js/app.js",
+    "./",
+    "./index.html",
+    "./style.css",
+    "./js/app.js",
     "images/0.png",
     "images/1.png",
     "images/2.png",
     "images/3.png",
     "images/4.png",
+    "icons/32.png",
+    "icons/128.png",
+    "icons/256.png",
+    "icons/512.png",
 ]
 
 self.addEventListener("install", function(installEvent) {
