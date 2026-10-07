@@ -52,7 +52,7 @@ function getClosestPoint(x, y, goal, pathPoints) {
             (goal.y - point.y) ** 2;
 
         // Don't choose points that move us farther from the goal
-        if (goalDistance >= currentDistanceToGoal) continue;
+        if (goalDistance >= currentDistanceToGoal) {continue};
 
         if (distance < closest && distance > 1) {
             closest = distance;
@@ -91,11 +91,11 @@ function changefloor(direction) {
 changefloor(0);
 function getGoal() {
 	let location = {x:0, y:0};
-	floorgoal = document.getElementById("floor").value;
-	if (floorgoal != currentfloor) {
+	floorgoal = document.getElementById("floor");
+	if (floorgoal.value != currentfloor) {
 		location = specialPoints.stairs;
 	} else {
-		let intentedfloor = floors[floorgoal];
+		let intentedfloor = floors[floorgoal.value];
 		location = intentedfloor[document.getElementById("classroom").value];
 	}
 	// console.log(intentedfloor[document.getElementById("classroom").value].x);
@@ -125,7 +125,10 @@ function translateUserCoordsToLocation() {
 	let percentagelat = userdifflat / difflat * 100;
 	let translatedpointlat = percentagelat * 6;
 	//check when in english which is more accurate
-	let point = {x: translatedpointlat - 40, y: 600 - translatedpointlong}
+	let point = {
+		x: translatedpointlat - 65, // "/"
+		y: 600 - translatedpointlong - 45 // "\"
+	}
 	// let point = {x: 600 - translatedpointlat, y: 600 - translatedpointlong}
 	return point;
 }
@@ -156,14 +159,22 @@ function drawLine(startX, startY, endX, endY) {
 function changeFloorIntent() {
 	let classroomoptions = document.getElementById("classroom");
 	removeOptions(classroomoptions);
-	classroomoptions.disabled = false;
-	
+	classroomoptions.disabled = false;	
+	getGoal();
+	console.log("floorgoal:" + floorgoal.value);
 	for (const classroom of Object.keys(floors[floorgoal.value])) {
 		const option = document.createElement("option");
 		option.value = classroom;
 		option.textContent = classroom;
 		classroomoptions.appendChild(option);
 	}
+
+	let focusedoption = document.createElement("option");
+	focusedoption.value = "unusable";
+	// focusedoption.hidden = true;
+	focusedoption.selected = true;
+	focusedoption.textContent = "klaslokaal";
+	classroomoptions.appendChild(focusedoption);
 }
 
 function removeOptions(selectElement) {
@@ -216,7 +227,6 @@ function drawroute() {
 		previousclosesty = locationy;
 	}
 	drawLine(previousclosestx, previousclosesty, goal.x, goal.y);
-	console.log("sigh");
 }
 
 function drawdot(point) {
@@ -244,7 +254,7 @@ function eliminateFurtherOptions(pathPoints) {
 		let userdistancefromgoaly = goal.y - translateduserlocation.y;
 		let distance1 = Math.sqrt((distancefromgoalx * distancefromgoalx) + (distancefromgoaly * distancefromgoaly));
 		let distance2 = Math.sqrt((userdistancefromgoalx * userdistancefromgoalx) + (userdistancefromgoaly * userdistancefromgoaly));
-		if (distance1 > distance2) {
+		if (distance1 - 5 > distance2) {
 			pathPoints[keynr].used = true;
 		}
 	}
@@ -254,10 +264,6 @@ function eliminateFurtherOptions(pathPoints) {
 for (const point of genericPathPoints) {
 	drawdot(point);
 }
-let spot = 6;
-// let thingy = getClosestPoint(genericPathPoints[spot].x, genericPathPoints[spot].y);
-// drawLine(genericPathPoints[spot].x, genericPathPoints[spot].y, thingy[0], thingy[1]);
-// drawLine(genericPathPoints[0].x, genericPathPoints[0].y, genericPathPoints[1].x, genericPathPoints[1].y);
 
 async function getLocation() {
     return new Promise((resolve, reject) => {
@@ -289,7 +295,10 @@ function start() {
         },
         error => {
             console.log("Location permission denied");
-        }
+        },
+		{
+			enableHighAccuracy: true
+		}
     );
 }
 
