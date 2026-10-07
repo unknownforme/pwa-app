@@ -9,6 +9,8 @@
 body, html {
     height: 100%;
     overflow: hidden;
+    background: #9effff;
+    background: radial-gradient(circle, rgba(158, 255, 255, 1) 38%, rgba(161, 156, 255, 1) 100%);
 }
 
 #header, #footer {
@@ -17,10 +19,22 @@ body, html {
     height: 10%;
 }
 
+button {
+    background: inherit;
+}
+
+select {
+    background-color: #00000000;
+}
+
 .styledheader {
     padding: 10px;
     flex: 1 1 auto;
     border-radius: 0;
+}
+
+.secondairyui {
+    /* background: linear-gradient(90deg, #94dfff 0%, #b700ff 100%); */
 }
 
 #container {
@@ -28,7 +42,7 @@ body, html {
     overflow: scroll;
     padding: 20px;
     height: 80%;
-}
+    }
 
 #imagecontainer {
     grid-area: 1 / 1;
@@ -43,7 +57,7 @@ body, html {
     margin-top: -50px;
     margin-left: -100px;
     transform: rotate(160deg);
-    border: 1px solid red;
+    /* border: 1px solid red; */
     height: 600px;
     width: 600px;
     grid-area: 1 / 1;

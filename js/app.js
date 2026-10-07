@@ -143,7 +143,7 @@ function isFirstCloser(x1, y1, x2, y2, goal) {
     let distance1 = difference1X * difference1X + difference1Y * difference1Y;
     let distance2 = difference2X * difference2X + difference2Y * difference2Y;
 
-    return distance1 < distance2;
+    return distance1  < distance2;
 }
 
 function drawLine(startX, startY, endX, endY) {
@@ -254,7 +254,7 @@ function eliminateFurtherOptions(pathPoints) {
 		let userdistancefromgoaly = goal.y - translateduserlocation.y;
 		let distance1 = Math.sqrt((distancefromgoalx * distancefromgoalx) + (distancefromgoaly * distancefromgoaly));
 		let distance2 = Math.sqrt((userdistancefromgoalx * userdistancefromgoalx) + (userdistancefromgoaly * userdistancefromgoaly));
-		if (distance1 - 5 > distance2) {
+		if (distance1 - 25 > distance2) {
 			pathPoints[keynr].used = true;
 		}
 	}
