@@ -14,9 +14,34 @@
     <meta name="theme-color" content="#f7df1e">
 </head>
 <body>
+    <div id="disableinput"></div>
+    <div id="guide">
+        gebruik:<br>
+        je moet eerst navigatie toestaan, en ook aanhebben op je telefoon voordat je deze app kan gebruiken.
+        <br>​
+        <br>
+        er kan bovenin een verdieping uit worden gekozen, en dan van die verdieping een lokaal. dat maakt als het goed is een route vanaf je huidige locatie tot het lokaal.
+        <br>​
+        <br>
+        waarschijnlijk leidt de app je naar een trap, onderaan het scherm kan je bepalen op welke verdieping je zit
+        <br>​
+        <br>
+        het kan mogelijk even duren voordat je een route krijgt.
+
+
+        <button id="closeguide" onclick="closeguide()">
+                <svg width="40px" height="40px" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="48" height="48" fill="white" fill-opacity="0.01"/>
+<path d="M8 8L40 40" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M8 40L40 8" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+                
+        </button>
+    </div>
+
     <div class="secondairyui" id="header">
         <div class="centeredtext themeborder styledheader">doel:</div>
-        <select class="centeredtext themeborder styledheader" id="floor" onchange="changeFloorIntent()" style="border-left: 0;border-right: 0;">
+        <select class="centeredtext themeborder styledheader" id="floor" onchange="changeFloorIntent()" style="border-left: 0; border-right: 0;">
             <option value="" hidden selected>kies verdieping</option>
             <option value="0">begane grond</option>
             <option value="1">verdieping 1</option>
@@ -42,7 +67,9 @@
             <img class="map" id="floor4" src="images/4.png" hidden>
         </div><!-- for the images to load -->
     </div>
+
     <div class="secondairyui" id="footer">
+        <button id="openguide" onclick="openguide()">help</button>
         <div class="centeredtext themeborder" id="textfooter">
             huidige verdieping:
         </div>

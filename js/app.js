@@ -261,6 +261,16 @@ function eliminateFurtherOptions(pathPoints) {
 	return pathPoints;
 }
 
+function openguide(){
+	document.getElementById('guide').style.zIndex = 5;
+	document.getElementById('disableinput').style.zIndex = 2;
+}
+
+function closeguide() {
+	document.getElementById('disableinput').style.zIndex = -2;
+	document.getElementById('guide').style.zIndex = -5;
+}
+
 for (const point of genericPathPoints) {
 	drawdot(point);
 }
