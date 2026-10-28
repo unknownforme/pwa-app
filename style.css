@@ -69,6 +69,18 @@ select {
     color: black;
 }
 
+#darkswitch {
+    width: 30px; 
+    height: 30px; 
+    position: absolute; 
+    top: 12%; 
+    right: 5%; 
+    border: 0; 
+    padding: 3px; 
+    border-radius: 50%; 
+    background-color: yellow;
+}
+
 #overlay {
     margin-top: -50px;
     margin-left: -100px;
