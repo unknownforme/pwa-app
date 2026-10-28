@@ -1,6 +1,7 @@
 const svgNS = "http://www.w3.org/2000/svg";
 const x = document.getElementById("demo");
 const svg = document.getElementById("svg");
+const overlay = document.getElementById("overlay");
 let floorgoal = document.getElementById("floor");
 let currentfloor = 0;
 // latitude is horizontal, x is horizontal too
@@ -9,6 +10,7 @@ const maxlong = 52.017550;
 const minlat = 4.683915;
 const minlong = 52.016908;
 const maxlat = 4.684972;
+let iscurrentmodedark = false;
 let userlocationx = Infinity;
 let userlocationy = Infinity;
 const floors = {
@@ -20,6 +22,33 @@ const floors = {
 };
 //topleft: 52.017550, 4.683915
 // bottomright: 52.016908, 4.684972
+
+function changecolormode() {
+	console.log("clicked");
+	let body = document.getElementById("body");
+	if (iscurrentmodedark) {
+		let coloredelements = document.querySelectorAll('p.dark');
+		for (let colorelement of coloredelements) {
+			colorelement.classList.add('dark');
+			colorelement.classList.remove('light');
+		}
+		body.classList.add('dark');
+		body.classList.remove('light');
+		document.querySelector(':root').style.setProperty('--svgcolor', 'white');
+		iscurrentmodedark = false;
+	} else {
+		let coloredelements = document.querySelectorAll('p.light');
+		for (let colorelement of coloredelements) {
+			colorelement.classList.add('dark');
+			colorelement.classList.remove('light');
+		}
+		body.classList.remove('dark');
+		body.classList.add('light');
+		document.querySelector(':root').style.setProperty('--svgcolor', 'black');
+		iscurrentmodedark = true;
+	}
+}
+
 function getClickPosition(e) {
 	const point = svg.createSVGPoint();
 	point.x = e.clientX;
@@ -105,7 +134,17 @@ function getGoal() {
 
 function drawUserLocation() {
 	console.log("drawn user");
+
 	let mylocation = translateUserCoordsToLocation();
+	let userlocationflag = document.createElement('img');
+	userlocationflag.setAttribute("class", "line");
+	userlocationflag.setAttribute("src", "images/here.png");
+	userlocationflag.setAttribute("id", "imhere");
+	userlocationflag.style.height = "80px";
+	userlocationflag.style.width = "60px";
+	userlocationflag.style.width = "60px";
+	userlocationflag.style.transform = "rotate(-160deg)";
+	overlay.appendChild(userlocationflag);
 	console.log(mylocation.x);
 	drawdot(mylocation);
 }
@@ -207,6 +246,7 @@ function drawroute() {
 	//go to the stairs
 	let goal = getGoal();
 	let translateduserlocation = translateUserCoordsToLocation();
+	
 	let locationx = translateduserlocation.x;
 	let locationy = translateduserlocation.y;
 	let previousclosestx = locationx;

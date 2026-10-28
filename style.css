@@ -1,3 +1,10 @@
+:root {
+    --svgcolor: black;
+}
+
+::-webkit-scrollbar { 
+    display: none; 
+}    
 * {
     box-sizing: border-box;
     padding: 0;
@@ -10,7 +17,10 @@ body, html {
     height: 100%;
     overflow: hidden;
     background: #9effff;
-    background: radial-gradient(circle, rgba(158, 255, 255, 1) 38%, rgba(161, 156, 255, 1) 100%);
+}
+
+.svgcolor {
+    fill: var(--svgcolor);
 }
 
 #header, #footer {
@@ -47,6 +57,16 @@ select {
     width: 400px;
     height: 600px;
     grid-area: 1 / 1;
+}
+
+.dark {
+    background: radial-gradient(circle,rgba(0, 8, 71, 1) 38%, rgba(74, 0, 53, 1) 100%);
+    color: white;
+}
+
+.light {
+    background: radial-gradient(circle, rgba(158, 255, 255, 1) 38%, rgba(161, 156, 255, 1) 100%);
+    color: black;
 }
 
 #overlay {
@@ -124,10 +144,14 @@ option {
     left: 10%;
     width: 80%;
     display: flex;
-    border: 2px solid rgb(0, 0, 0);
+    border: 2px solid #000000;
     background-color: #bdffff;
     border-radius: 20px;
     font-weight: normal;
+}
+
+#imhere {
+    position: absolute;
 }
 
 #closeguide {
